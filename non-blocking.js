@@ -64,6 +64,7 @@ const readFileEx = (filePath) => {
   return new Promise((resolve, reject) => {
     fs.readFile(filePath, (err, data) => {
       if (err) throw reject(err);
+
       resolve(data);
     });
   });
