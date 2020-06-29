@@ -177,6 +177,17 @@ const merged = {
 - Object.assignメソッドはshallow copyする。ネストした先のオブジェクトまで複製するわけではない
 - 
 
+## プロトタイプオブジェクト
+- toString以外にもオブジェクトに自動的に実装されるメソッドのことをビルトインメソッドという
+- Object以外のオブジェクトはObjectを継承している
+  - 正確にはObject.prototypeプロパティに定義されたprototypeオブジェクトを継承している
+- in演算子はオブジェクト自信が持っていなければ、そのオブジェクトの継承元であるprototypeオブジェクトまで探索する。だからfor...inはNGってことかな
+- オブジェクトリテラルはObject.prototypeオブジェクトを自動的に継承したオブジェクトを作成している
+- ArrayのインスタンスはArray.prototypeを継承していて、Array.prototypeはObject.prototypeを継承している
+- Object.prototypeは全てのオブジェクトの親となるオブジェクト。Array.prototypeなどもそれぞれ独自のメソッドを定義しており、配列のインスタンスでtoStringメソッドを呼び出すとArray#toStringが優先して呼び出される。インスタンスメソッドが優先される。
+- 例外としてObject.create(null)でObject.prototypeを継承しない、プロパティやメソッドをまったく持たないまったく持たない本当にからのオブジェクトが作れる
+- 子は親のプロパティを共通で使える。**newをしても、関数は無駄に生成されない。**汎用的な関数はprototypeに定義。インスタンスはその同じ関数を使う。
+
 ## JSON
 - JavaScript Object Notationの略、JavaScriptのオブジェクトリテラルをベースに作られた軽量なデータ・フォーマット
 - 人間にも読み書きが容易で、マシンにとっても簡単にパースや生成が行える
@@ -218,13 +229,17 @@ import "./side-effects.js";
 - 
 ## TODO
 - [ ] Symbol何に使う
-- [ ] ビルトインオブジェクト is 何
+- [x] ビルトインオブジェクト is 何
+  - あらゆるオブジェクトの元となるObject のこと
+  - ビルトインオブジェクトは実行環境に組み込まれたオブジェクトのことです。 
+  - ObjectというビルトインオブジェクトはECMAScriptの仕様で定義されているため、あらゆるJavaScriptの実行環境で利用できます。
+
 
 - [ ] プロトタイプチェーン
 - [ ] strictモードに自動でなる条件
 
 ## 章
-- [ ] プロトタイプオブジェクト
+- [x] プロトタイプオブジェクト
 - [ ] 配列
 - [ ] 文字列
 - [ ] 文字列とUnicode
