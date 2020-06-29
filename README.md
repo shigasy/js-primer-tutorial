@@ -127,3 +127,55 @@ console.log(obj.method())
   - Symbol.iteratorで返す関数を書けば自作することも可能
 - forのインクリメントする場合、let。for...ofなどはループの度にブロックで囲まれて実行される。そのためconstで宣言。https://github.com/asciidwango/js-primer/issues/567
 
+## オブジェクト
+- オブジェクトのプロパティ名はは`""`や`'`を省略できるが、変数の識別子として利用できないプロパティは`""`や`'`で囲む必要がある。
+  - 変数の識別子として利用できないのであれば、ドット記法でも呼び出せない
+- ES2015からプロパティ名と変数名が同じであれば省略できる
+```javascript
+const name = "名前"
+const obj = {
+  name
+}
+```
+- プロパティを初期化時以外に追加してしまうと、そのオブジェクトがどのようなプロパティを持っているかが分かりにくくなる。できる限り作成後に新しいプロパティは追加しない。
+- Object.freezeを使うと、プロパティの変更や追加を行おうとすると例外が発生する。ただし、strict modeと合わせて使わないと、無視される
+- プロパティ名が間違えていた場合にも、例外が発生しない。さらにプロパティ名をネストしてアクセスした場合に、はじめて例外が発生する。
+  - undefinedで比較すると、プロパティの値がundefinedの可能性があるため、keyがないのか、プロパティ名がundefinedか分からない問題
+  - in演算子かhasOwnPropertyを使う
+  - 厳密には違うからプロトタイプオブジェクト章で解説
+```javascript
+const obj = { key: undefined };
+// `key`プロパティを持っているならtrue
+if ("key" in obj) {
+    console.log("`key`プロパティは存在する");
+}
+if (obj.hasOwnProperty("key")) {
+    console.log("`object`は`key`プロパティを持っている");
+}
+```
+- [ES2015] Object.assignは第一引数に空の配列を指定して既存のオブジェクトに影響を与えずにマージするのが典型的な利用方法
+```javascript
+const merged = Object.assign({}, objectA, objectB);
+```
+```javascript
+// 既存のオブジェクトに追加する場合。
+// objectAの値が変わる
+const merge = Object.assign(objectA, objectB)
+```
+
+
+- [ES2018] オブジェクトに対するspread構文が追加された。必ず新しいオブジェクトを生成する。spread構文はオブジェクトリテラルの中でのみ記述でき、オブジェクトリテラルは新しいオブジェクトを作成するから。
+```javascript
+const objectA = { a: "a" }
+const objectB = { b: "b" }
+const merged = {
+  ...objectA,
+  ...objectB
+}
+```
+- Object.assignメソッドはshallow copyする。ネストした先のオブジェクトまで複製するわけではない
+- 
+
+## TODO
+- [ ] Symbol何に使う
+- [ ] ビルトインオブジェクト is 何
