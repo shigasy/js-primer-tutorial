@@ -176,6 +176,43 @@ const merged = {
 - Object.assignメソッドはshallow copyする。ネストした先のオブジェクトまで複製するわけではない
 - 
 
+## JSON
+- JavaScript Object Notationの略、JavaScriptのオブジェクトリテラルをベースに作られた軽量なデータ・フォーマット
+- 人間にも読み書きが容易で、マシンにとっても簡単にパースや生成が行える
+- オブジェクトリテラルのキーを必ずダブルクォートで囲まなければならない
+- 外部プログラムとデータを交換する用途がほとんどで、データが常にJSONとして正しい保証がないため、JSON.parseメソッドは基本的にtry...catch構文で例外処理するべき
+```javascript
+try {
+    const json = JSON.parse(userInput);
+} catch (error) {
+    console.log("パースできませんでした");
+}
+```
+- JSON.stringify: オブジェクトをJSON文字列に
+- JSON.parse: JSON文字列をオブジェクトに
+- 両方ともtry...catch構文で安全に
+
+
 ## TODO
 - [ ] Symbol何に使う
 - [ ] ビルトインオブジェクト is 何
+
+- [ ] プロトタイプチェーン
+
+## 章
+- [ ] プロトタイプオブジェクト
+- [ ] 配列
+- [ ] 文字列
+- [ ] 文字列とUnicode
+- [ ] ラッパーオブジェクト
+- [ ] 関数とスコープ
+- [ ] 関数とthis
+- [ ] クラス
+- [ ] 例外処理
+- [ ] 非同期処理
+- [ ] Map/Set
+- [x] JSON
+- [ ] Date
+- [ ] Math
+- [ ] ECMAScriptモジュール
+- [ ] ECMAScript
