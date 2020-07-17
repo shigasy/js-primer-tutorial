@@ -410,7 +410,15 @@ import "./side-effects.js";
 - ステージ3以下は`tc39/proposals`に載っているため、過程や最新の正確な情報を知りたい場合に参照する。
 - ステージ4未満はまだ安定していない。
 - 常に追うのも良いけど、調べたい時に知る手段を知っておくだけで違う
+
+
+## Ajax通信
+- DOMとは、HTMLドキュメントのコンテンツと構造をJavaScriptから操作できるオブジェクトのこと。DOMではHTMLドキュメントのタグを入れ子関係を木構造で表現するため、DOMが表現するHTMLタグの木構造をDOMツリーと呼ぶ
+- DOMはブラウザが実装しているAPI
+- XHRはFetch APIと同じくHTTP通信を行うためのAPI（XMLHttpRequestにPromise追加して高機能になったイメージ）
 - 
+
+
 ## TODO
 - [ ] Symbol何に使う
 - [x] ビルトインオブジェクト is 何
