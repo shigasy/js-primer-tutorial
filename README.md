@@ -418,6 +418,10 @@ import "./side-effects.js";
 - XHRはFetch APIと同じくHTTP通信を行うためのAPI（XMLHttpRequestにPromise追加して高機能になったイメージ）
 - 
 
+## node cli
+- npm v 5.0.0 から package-lock と --saveデフォルトオプションが追加された
+- package-lockは実際にインストールしたものを再度同じversionでインストールするためのもの
+- 
 
 ## TODO
 - [ ] Symbol何に使う
