@@ -1,19 +1,33 @@
-function main() {
+async function main() {
   // fetchUserInfoで取得とcreateViewとdisplayViewをやっていると見通し悪い
   // thenに渡されたコールバック関数の戻り値をそのまま次のhenへ渡す
   // Promiseである場合は、そのPromiseで解決された値を次のthenにわたす
   // 同期処理から非同期処理に変わったとしても次のthenが受け取る値の型は変わらない
   // thenを使ってつなぐことで変更に強い。同期処理から非同期処理に変更できるため
-  fetchUserInfo("js-primer-example")
-    .then((userInfo) => {
-      return createView(userInfo);
-    })
-    .then((view) => {
-      displayView(view);
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+  // fetchUserInfo("js-primer-example")
+  //   .then((userInfo) => {
+  //     return createView(userInfo);
+  //   })
+  //   .then((view) => {
+  //     displayView(view);
+  //   })
+  //   .catch((err) => {
+  //     console.error(err);
+  //   });
+
+  // 入れ子がなくなって手続き的で可読性高い
+  // エラーハンドリングはtry...catch構文を使うことができる
+  try {
+    const userId = fetUserId();
+    const userInfo = await fetchUserInfo(userId);
+    const view = createView(userInfo);
+    displayView(view);
+  } catch (error) {
+    console.error(error);
+  }
+}
+function fetUserId() {
+  return document.getElementById("userId").value;
 }
 
 function fetchUserInfo(userId) {
