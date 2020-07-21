@@ -386,6 +386,81 @@ console.log(array.flat(Infinity)); // => ["A", "B", "C"]
 
 - console.error はスタックトレースが出力されるから、エラーの場合はデバッグしやすいよ
 
+## 非同期処理: コールバック/Promise/Async Function
+- JavaScriptは基本的にブラウザのメインスレッドで実行されるため、同期的にブロックするコードを書くと、フリーズしたみたいになる
+- 非同期処理も同期処理も同じスレッドで実行
+- もし非同期処理が別スレッドで行われるならば、自由なデータへのアクセスは競合状態を引き起こしてしまう
+- JavaScriptでは、一部の例外を除き非同期処理が並行処理(concurrent)として扱われる。非同期処理はは非同期なタイミングで実行される処理
+- WebWorkerにおける非同期処理は並列処理(parallel)。並列処理とは、排他的に複数の処理を同時に実行すること
+
+- tryブロックはブロック内で発生した例外をキャッチする構文
+- しかし、setTimeOut関数で登録されたコールバック関数が実際に実行されて例外を投げるのは、すべての同期処理が終わった後になる。
+- つまり、tryブロックで例外が発生しうるとマークした範囲外で例外が発生します。
+
+- エラーファーストコールバック
+  - Promiseが入るまで、使われていた。非同期処理中に発生した例外を扱う方法
+  - コールバック関数の1番目の引数にエラーオブジェクトまたはnullを入れ、それ以降の引数にデータを渡すというルールのこと
+
+- Promise
+  - ES2015で導入された非同期処理の結果を表現するビルトインオブジェクト
+  - エラーファーストコールバックとは異なり、Promiseインスタンスを返す。
+  - その返されたPromiseインスタンスに対して、成功と失敗の処理をそれぞれコールバック関数として渡すという形
+  - エラーファーストコールバックより、複雑な非同期処理をうまくパターン化できるのがPromiseの役割。
+  - Promiseではコンストラクタの処理で例外が発生した場合に、自動的に例外がキャッチされる。例外が発生したPromiseインスタンスはreject関数を呼び出したのと同じように失敗したものとして扱われる
+  - そのため、try...catch構文を使わなくてもキャッチできる。
+  - catchはthenのシンタックスシュガー
+```javascript
+// 非推奨: `then`メソッドで失敗時のコールバック関数だけを登録
+errorPromise("thenでエラーハンドリング").then(undefined, (error) => {
+    console.log(error.message); // => "thenでエラーハンドリング"
+});
+// 推奨: `catch`メソッドで失敗時のコールバック関数を登録
+errorPromise("catchでエラーハンドリング").catch(error => {
+    console.log(error.message); // => "catchでエラーハンドリング"
+});
+```
+
+
+- Promiseの状態
+  - Fulfilled
+  - Rejected
+  - Pending
+  - が存在する
+  - Promiseインスタンスの状態は作成時にPendingとなり、一度でもFulfilledまたはRejectedへ変化すると、それ以降状態は変化しなくなります。 そのため、FulfilledまたはRejectedの状態であることをSettled（不変）と呼びます。
+
+- Promiseチェーン
+  - thenやcatchメソッドは常に新しいPromiseインスタンスを作成して返すため、thenメソッドの返り値であるPromiseインスタンスにさらにthenメソッドで処理できる
+
+- [ES2018] then...catch...finallyもあるよ
+
+- Promise.allで複数のPromiseをまとめられる
+  - Promise.allメソッドはPromiseインスタンスの配列を受け取り、新しいPromiseインスタンスを返す
+  - 配列のすべてのPromiseインスタンスがFulfilledとなった場合、返り値のPromiseインスタンスもFulfilledとなる
+  - Rejectedとなった場合、返り値はRejectedとなる
+  - Promiseチェーンで逐次処理ができたが、順番がない場合、Promise.allででまとめられる。でまとめられる。同時であれば、より早い時間で処理が完了する。
+
+- Promise.raceで1つでも処理が完了した(Settle状態となった)時点で次の処理を実行する
+  - 一番早いものを実行
+  - timeout処理とか書きやすい
+
+- Promiseを使うと、非同期処理のさまざまなパターンが形成できる。一方でPromiseは構文ではなくただのオブジェクトであるため、メソッドチェーンとして実現しないといけない制限がある。そのため、ES2017ではPromiseチェーンの不格好な見た目を解決するためにAsync Functionと呼ばれる構文が導入された
+
+- [ES2017] Async Function
+  - asyncをつけると、関数は常にPromiseインスタンスを返す
+  - async Function内ではawait式が利用できる
+
+- await式は右辺のPromiseインスタンスがFulfilledまたはRejectedになるまでその場で非同期処理の完了を待つ
+- await式がエラーをthrowするため、try...catch構文でキャッチできる
+- 逐次的に書けるため、ネストがなく、見た目がシンプル
+- forループの中でもawaitでできる
+- 逐次awaitしていたら、直列な動きになるため、Promiseを配列として持ってから、Promise.allすれば並行？処理的にできる
+- Async Functionも内部的にPromiseの仕組みを利用しているため、両者は対立関係ではなく、共存関係。awaitはPromiseAPIと組み合わせられる
+- async外の処理はそのまま進む
+  - アプリが停止しないようにするため
+  - 外でawaitを使って、停止を防止するため、async内でしか使えなくなっている
+- コールバック関数内で実行するとき、スコープが違うため、await関数がそのままでは使えない。async functionのコールバック関数を渡す必要がある
+- しかし、処理実行の順番がasync function外はそのまま進んでしまうため、forループとawait式を組み合わせるか、Promise.allを使ってループ中にawait式を使わないようにする方法がある
+
 ## Map/Set
 - ES2015からデータを集まりを扱うコレクションが追加された
 - Mapは他で言う連想配列とか辞書とか
@@ -501,7 +576,7 @@ import "./side-effects.js";
 - [x] 関数とthis
 - [ ] クラス
 - [x] 例外処理
-- [ ] 非同期処理
+- [x] 非同期処理
 - [x] Map/Set
 - [x] JSON
 - [x] Date
