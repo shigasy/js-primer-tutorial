@@ -27,7 +27,7 @@ C.prototype.x = "xxx";
 // console.log(C.__proto__);
 // __proto__はコンストラクタ関数のprototypeを参照する（今回の場合、Function）
 // console.log(C.__proto__ === Function.prototype);
-// const fn = Function.prototype.constructor; // new演算子ってこういうことじゃないかな
+// const fn = Function.prototype.constructor; // new演算子ってこういうことじゃないかな => そうだった。インスタンスの初期化処理をコンストラクタ関数で行う。それをnew演算子でインスタンス化する際に自動的に呼び出せる
 // console.log(fn.prototype);
 const c1 = new C("hoge");
 const c2 = new C("huga");

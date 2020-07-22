@@ -38,3 +38,12 @@ class ArrayWrapper {
 const arrayWrapperA = new ArrayWrapper([1, 2, 3]);
 const arrayWrapperB = ArrayWrapper.of(1, 2, 3);
 console.log(arrayWrapperA.length, arrayWrapperB.length);
+
+// ==========
+class Point {
+  constructor(x, y) {
+    // コンストラクタ関数におけるthisはインスタンスを示すオブジェクト
+    this.x = x;
+    this.y = y;
+  }
+}
