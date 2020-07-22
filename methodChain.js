@@ -28,6 +28,7 @@ myArray.repush(2).repush(3).repush(4, 4, 1);
 console.log(myArray); // => [1, 2, 1, 2, 3, 4, 4, 1]
 
 // メソッドチェーン（prototype拡張（理由がない限り非推奨））（昔良く使われていた？？）
+// 他のライブラリと名前が被ったり、将来標準JavaScriptに仕様の違う同名メソッドを定義されたり
 // Arrayのprototypeにメソッドを拡張する感じ
 // 全てのArrayに影響がでる
 Array.prototype.repush2 = function (value) {
@@ -59,3 +60,18 @@ Object.defineProperty(Array.prototype, "clear", {
 
 prototypeArray.clear();
 console.log(prototypeArray);
+
+// クロージャーでメソッドチェーン
+const simpleCalc = (() => {
+  let value = 0;
+  return {
+    add(num) {
+      value += num;
+      return this;
+    },
+    val() {
+      return value;
+    },
+  };
+})();
+console.log(simpleCalc.add(1).add(2).val()); // => 3
